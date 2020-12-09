@@ -1,0 +1,79 @@
+service: where-to-dance
+#     // TODO app and org for use with dashboard.serverless.com
+#     // app: where-to-dance
+#     // org: otterdev
+
+# frameworkVersion: '2'
+
+
+plugins:
+  - serverless-webpack
+  - serverless-aws-documentation
+  - serverless-reqvalidator-plugin
+
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  apiGateway:
+    minimumCompressionSize: 1024
+    shouldStartNameWithService: true # Preparation for serverless framework v3.0.0
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+  
+
+custom:
+  documentation:
+    api:
+      info:
+        version: v1.0.0
+        title: Where to Dance API
+        description: Serverless application for Where to Dance API
+    models:
+      - name: CreateVenueRequest
+        contentType: application/json
+        schema: ${file(models/create-venue-request.json)}
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+
+functions:
+  Auth:
+    handler: src/lambda/auth/auth0Authorizer.handler
+
+  hello:
+    handler: src/lambda/http/hellowheretodance.hello
+    events:
+      - http:
+          method: get
+          path: hello
+          cors: true
+          authorizer: Auth
+
+  CreateVenue:
+    handler: src/lambda/http/createVenue.handler
+    events:
+      - http:
+          method: post
+          path: venues
+          cors: true
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Create a new Venue
+            description: Creates a new venue by an authenticated user
+            requestModels:
+              application/json: CreateVenueRequest
+
+resources:
+  Resources:
+
+    RequestBodyValidator:
+      Type: AWS::ApiGateway::RequestValidator
+      Properties:
+        Name: request-body-validator
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        ValidateRequestBody: true
+        ValidateRequestParameters: false

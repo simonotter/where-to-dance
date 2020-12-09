@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "venue",
+  "type": "object",
+  "properties": {
+    "name":{
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9 ]+$",
+      "minLength": 3,
+      "maxLength": 30
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false
+}

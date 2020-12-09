@@ -1,5 +1,5 @@
-import { JwtPayload } from './JwtPayload'
-import { JwtHeader } from 'jsonwebtoken'
+import { JwtPayload } from './JwtPayload';
+import { JwtHeader } from 'jsonwebtoken';
 
 /**
  * Interface representing a JWT token

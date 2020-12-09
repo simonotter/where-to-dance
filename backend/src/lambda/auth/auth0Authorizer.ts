@@ -45,57 +45,57 @@ const logger = createLogger('auth');
 
 
 export const handler = async (
-  event: CustomAuthorizerEvent
+	event: CustomAuthorizerEvent
 ): Promise<CustomAuthorizerResult> => {
-  logger.info('Authorizing a user', {authoriztionToken: event.authorizationToken});
-  try {
-    const jwtToken = await verifyToken(event.authorizationToken);
-    logger.info('User was authorized', {jwtToken: jwtToken});
+	logger.info('Authorizing a user', {authoriztionToken: event.authorizationToken});
+	try {
+		const jwtToken = await verifyToken(event.authorizationToken);
+		logger.info('User was authorized', {jwtToken: jwtToken});
 
-    return {
-      principalId: jwtToken.sub,
-      policyDocument: {
-        Version: '2012-10-17',
-        Statement: [
-          {
-            Action: 'execute-api:Invoke',
-            Effect: 'Allow',
-            Resource: '*'
-          }
-        ]
-      }
-    };
-  } catch (e) {
-    logger.error('User not authorized', { error: e.message });
+		return {
+			principalId: jwtToken.sub,
+			policyDocument: {
+				Version: '2012-10-17',
+				Statement: [
+					{
+						Action: 'execute-api:Invoke',
+						Effect: 'Allow',
+						Resource: '*'
+					}
+				]
+			}
+		};
+	} catch (e) {
+		logger.error('User not authorized', { error: e.message });
 
-    return {
-      principalId: 'user',
-      policyDocument: {
-        Version: '2012-10-17',
-        Statement: [
-          {
-            Action: 'execute-api:Invoke',
-            Effect: 'Deny',
-            Resource: '*'
-          }
-        ]
-      }
-    };
-  }
+		return {
+			principalId: 'user',
+			policyDocument: {
+				Version: '2012-10-17',
+				Statement: [
+					{
+						Action: 'execute-api:Invoke',
+						Effect: 'Deny',
+						Resource: '*'
+					}
+				]
+			}
+		};
+	}
 };
 
 async function verifyToken(authHeader: string): Promise<JwtPayload> {
-  const token = getToken(authHeader);
+	const token = getToken(authHeader);
 
-  // What is the purpose of this line? It doesn't seem necessary
-  const jwt: Jwt = decode(token, { complete: true }) as Jwt;
-  logger.info('jwt', { jwt: jwt });
+	// What is the purpose of this line? It doesn't seem necessary
+	const jwt: Jwt = decode(token, { complete: true }) as Jwt;
+	logger.info('jwt', { jwt: jwt });
 
-  return verify(
-    token,
-    certificate,
-    { algorithms: ['RS256']}
-  ) as JwtPayload;
+	return verify(
+		token,
+		certificate,
+		{ algorithms: ['RS256']}
+	) as JwtPayload;
 
 }
 

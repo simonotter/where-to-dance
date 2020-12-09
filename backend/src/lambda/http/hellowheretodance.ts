@@ -2,13 +2,13 @@ import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } f
 import 'source-map-support/register';
 
 export const hello: APIGatewayProxyHandler = async (
-  event: APIGatewayProxyEvent,
-  _context): Promise<APIGatewayProxyResult> => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Where to dance!',
-      input: event,
-    }, null, 2),
-  };
-}
+	event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  
+	return {
+		statusCode: 200,
+		body: JSON.stringify({
+			message: 'Where to dance!',
+			input: event,
+		}, null, 2),
+	};
+};
