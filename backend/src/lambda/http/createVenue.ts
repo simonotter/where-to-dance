@@ -1,8 +1,9 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
 import 'source-map-support/register';
 import { getToken, parseUserId } from '../../auth/utils';
+import { createVenue } from '../../businessLogic/venues';
+import { Venue } from '../../models/Venue';
 import { CreateVenueRequest } from '../../requests/CreateVenueRequest';
-
 import { createLogger } from '../../utils/logger';
 
 const logger = createLogger('createVenue');
@@ -21,12 +22,18 @@ export const handler: APIGatewayProxyHandler = async (
 
 	const userId = parseUserId(jwtToken);
 	logger.info('userId: ', { userId: userId });
+	// TODO move user extraction to middy middleware
+
+	// Create Venue Item
+	const item: Venue = await createVenue(newVenue, userId);
 
 	return {
 		statusCode: 200,
 		body: JSON.stringify({
-			message: `Created Venue: ${newVenue} and User is: ${userId}`
+			item
 		})
 	};
 
 };
+
+// TODO: Add middy middleware and CORS headers.
