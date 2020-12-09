@@ -11,7 +11,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "source-map-support": "^0.5.10"
+    "jsonwebtoken": "^8.5.1",
+    "source-map-support": "^0.5.10",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",
