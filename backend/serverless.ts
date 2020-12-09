@@ -36,9 +36,13 @@ const serverlessConfiguration: Serverless = {
           http: {
             method: 'get',
             path: 'hello',
+            authorizer: { name: 'Auth' }
           }
         }
       ]
+    },
+    Auth: {
+      handler: 'src/lambda/auth/auth0Authorizer.handler'
     }
   }
 }
