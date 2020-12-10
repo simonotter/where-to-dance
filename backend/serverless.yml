@@ -1,10 +1,6 @@
 service: where-to-dance
-#     // TODO app and org for use with dashboard.serverless.com
-#     // app: where-to-dance
-#     // org: otterdev
 
-# frameworkVersion: '2'
-
+frameworkVersion: '2'
 
 plugins:
   - serverless-webpack

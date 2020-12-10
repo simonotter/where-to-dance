@@ -25,4 +25,24 @@ export class VenueAccess {
 
 		return venue;
 	}
+
+	async deleteVenue(userId: string, venueId: string): Promise<string> {
+
+		logger.info('Deleting a venue', {
+			userId: userId,
+			venueId: venueId,
+		});
+
+		await this.docClient.delete({
+			TableName: this.venuesTable,
+			Key: {
+				userId: userId,
+				todoId: venueId
+			}
+		}).promise();
+
+		logger.info('Delete statement has completed without error');
+
+		return 'nothing';
+	}
 }
