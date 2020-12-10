@@ -7,6 +7,7 @@ import { CreateVenueRequest } from '../../requests/CreateVenueRequest';
 import { createLogger } from '../../utils/logger';
 import * as middy from 'middy';
 import { cors } from 'middy/middlewares';
+import { authMiddy } from '../../utils/authMiddleware';
 
 const logger = createLogger('createVenue');
 
@@ -38,8 +39,10 @@ export const handler = middy(async (
 
 });
 
-handler.use(
-	cors({
-		credentials: true
-	})
-);
+handler
+	.use(
+		cors({
+			credentials: true
+		})
+	)
+	.use(authMiddy());
