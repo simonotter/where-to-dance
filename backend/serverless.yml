@@ -73,6 +73,24 @@ functions:
           - dynamodb:PutItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.VENUES_TABLE}
 
+  DeleteVenue:
+    handler: src/lambda/http/deleteVenue.handler
+    events:
+      - http:
+          method: delete
+          path: venues/{venueId}
+          cors: true
+          authorizer: Auth
+          documentation:
+            summary: Delete an existing Venue
+            description: Deletes an existing Venue by the owining authenticated user
+    iamRoleStatementsName: Delete-From-DynamoDB-Venues-Table
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:DeleteItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.VENUES_TABLE}
+
 resources:
   Resources:
 

@@ -1,21 +1,19 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import 'source-map-support/register';
 import { getToken, parseUserId } from '../../auth/utils';
-import { createVenue } from '../../businessLogic/venues';
-import { Venue } from '../../models/Venue';
-import { CreateVenueRequest } from '../../requests/CreateVenueRequest';
+import { deleteVenue } from '../../businessLogic/venues';
 import { createLogger } from '../../utils/logger';
 import * as middy from 'middy';
 import { cors } from 'middy/middlewares';
 
-const logger = createLogger('createVenue');
+const logger = createLogger('deleteVenue');
 
 export const handler = middy(async (
 	event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+	
+	const venueId = event.pathParameters.venueId;
   
 	logger.info('Processing event: ', { event: event });
-
-	const newVenue: CreateVenueRequest = JSON.parse(event.body);
 
 	// Get user id
 	const authHeader = event.headers.Authorization;
@@ -26,15 +24,25 @@ export const handler = middy(async (
 	logger.info('userId: ', { userId: userId });
 	// TODO move user extraction to middy middleware
 
-	// Create Venue Item
-	const item: Venue = await createVenue(newVenue, userId);
+	// Delete Venue Item
+	try {
+		await deleteVenue(userId, venueId);
+		
 
-	return {
-		statusCode: 201,
-		body: JSON.stringify({
-			item
-		})
-	};
+		return {
+			statusCode: 204,
+			body: ''
+		};
+
+	} catch (e) {
+
+		return {
+			statusCode: 404,
+			body: `error ${e}`
+		};
+	}
+
+	
 
 });
 

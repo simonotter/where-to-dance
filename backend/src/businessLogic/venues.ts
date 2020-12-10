@@ -16,7 +16,7 @@ export async function createVenue(
 	userId: string
 ): Promise<Venue> {
 
-	logger.info('Entering Business Logic function');
+	logger.info('Entering Business Logic function createVenue');
 
 	const venueId = uuid.v4();
 	const timestamp = new Date().toISOString();
@@ -29,4 +29,11 @@ export async function createVenue(
 	};
 
 	return await venueAccess.createVenue(venue);
+}
+
+export async function deleteVenue(userId: string, venueId: string): Promise<void> {
+
+	logger.info('Entering Business Logic function deleteVenue');
+
+	return await venueAccess.deleteVenue(userId, venueId);
 }
