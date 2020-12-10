@@ -32,8 +32,15 @@ export async function createVenue(
 }
 
 export async function deleteVenue(userId: string, venueId: string): Promise<void> {
-
+	
 	logger.info('Entering Business Logic function deleteVenue');
 
 	return await venueAccess.deleteVenue(userId, venueId);
+}
+
+export async function getUsersVenues(userId: string): Promise<Venue[]> {
+	
+	logger.info('Entering Business Logic function getMyVenues');
+
+	return await venueAccess.getUsersVenues(userId);
 }

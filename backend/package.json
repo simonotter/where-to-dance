@@ -26,6 +26,7 @@
     "@types/jsonwebtoken": "^8.5.0",
     "@types/node": "^10.12.18",
     "@types/serverless": "^1.78.13",
+    "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.9.1",
     "@typescript-eslint/parser": "^4.9.1",
     "codelyzer": "^6.0.1",

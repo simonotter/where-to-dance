@@ -46,4 +46,27 @@ export class VenueAccess {
 		});
 
 	}
+
+	async getUsersVenues(userId: string): Promise<Venue[]> {
+		logger.info('Getting user\'s venues', {
+			userId: userId,
+		});
+
+		const params: AWS.DynamoDB.DocumentClient.GetItemInput = {
+			TableName: this.venuesTable,
+			KeyConditionExpression: '#userId =:i',
+			ExpressionAttributeNames: {
+				'#userId': 'userId'
+			},
+			ExpressionAttributeValues: {
+				':i': userId
+			}
+		};
+
+		const result = await this.docClient.get(params);
+
+		const items = result.Items;
+
+		return items as Venue[];
+	}
 }

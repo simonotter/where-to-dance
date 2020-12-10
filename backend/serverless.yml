@@ -83,12 +83,30 @@ functions:
           authorizer: Auth
           documentation:
             summary: Delete an existing Venue
-            description: Deletes an existing Venue by the owining authenticated user
+            description: Deletes an existing Venue by the owning authenticated user
     iamRoleStatementsName: Delete-From-DynamoDB-Venues-Table
     iamRoleStatements:
       - Effect: Allow
         Action:
           - dynamodb:DeleteItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.VENUES_TABLE}
+  
+  GetUsersVenues:
+    handler: src/lambda/http/getUsersVenues.handler
+    events:
+      - http:
+          method: get
+          path: venues
+          cors: true
+          authorizer: Auth
+          documentation:
+            summary: Gets a list of the user's Venues
+            description: Get's a list of venues by the owning authenticated user
+    iamRoleStatementsName: Get-From-DynamoDB-Venues-Table
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.VENUES_TABLE}
 
 resources:
