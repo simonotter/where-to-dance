@@ -1,0 +1,295 @@
+{
+	"info": {
+		"_postman_id": "9b379fbf-423a-438a-9118-eae85c08f5de",
+		"name": "Where to Dance",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create venue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5ec6fdab-f025-48cc-ba6d-2a0607813744",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"// Store venueId in collection variable",
+							"var venueId = pm.response.json().item.venueId;",
+							"pm.collectionVariables.set('venueId', venueId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"my studio\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/venues",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"venues"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get users venues",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fec7edc5-3c89-4538-a1bd-09420b4d62e5",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const jasonData = pm.response.json();",
+							"pm.test(\"Test array properties\", () => {",
+							"   _.each(jasonData.items, (item) => {",
+							"       console.log(item);",
+							"   });",
+							"",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{domain}}/venues",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"venues"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update venue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "87852110-a05b-4d6e-a39a-36f0febe047e",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"my dance studio\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/venues/{{venueId}}",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"venues",
+						"{{venueId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete venue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f216a76f-aafa-4b9a-88f9-1fb66c2513cc",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{domain}}/venues/{{venueId}}",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"venues",
+						"{{venueId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "tokenName",
+				"value": "Auth0 Token3",
+				"type": "string"
+			},
+			{
+				"key": "tokenType",
+				"value": "Bearer",
+				"type": "string"
+			},
+			{
+				"key": "accessToken",
+				"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InQ3SjZpejkxQ2JJMkZ2QVREMldGaSJ9.eyJpc3MiOiJodHRwczovL2Rldi0tb3R0ZXIuZXUuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDVmZDBjM2ZmZTNiMDRiMDA3NmExNzc2OSIsImF1ZCI6WyJodHRwOi8vd3d3LndoZXJldG9kYW5jZS5jb20vIiwiaHR0cHM6Ly9kZXYtLW90dGVyLmV1LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2MDc1MzAwODksImV4cCI6MTYwNzYxNjQ4OSwiYXpwIjoiRFc2VFRHNjJHQUpPelQ2Tld3N2pZdEh4Q28yd1pyOEgiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.lRyuCr336JCluSNT3t6or6sz0ujY8gBNoLjjrIlaT-vw6iOs5x11BsBp6p5DoquqjoNjtFLILkKEO3VVFsgiyWDdYTDiC70kVWhgTab2pUgMPOM1H8atifZ6efzDVJgDntxz8TRa8OA-ntJPZ7uoVwWjrLKwsPyeWUtWd-kjyh3pCUlEJucukUMAFkBPZ7sIMNPIs2yV-DSGvzRfO-IVPbsaGdYtG9ZjIA1ZTA_HBJytnJ1K66tNQfQPb9tDydhgoA9-VTxxlML3bFpMmqiSnCro4TDM4Fsh6R-eqjl8Zc1m_kKWJjtng8inLBFGIYZqUBPx_rORDif3GNBg2jN5Hw",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "https://{{auth0_domain}}/oauth/token",
+				"type": "string"
+			},
+			{
+				"key": "challengeAlgorithm",
+				"value": "S256",
+				"type": "string"
+			},
+			{
+				"key": "state",
+				"value": "randomstring",
+				"type": "string"
+			},
+			{
+				"key": "scope",
+				"value": "openid profile email",
+				"type": "string"
+			},
+			{
+				"key": "redirect_uri",
+				"value": "https://www.getpostman.com/oauth2/callback",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "authorization_code",
+				"type": "string"
+			},
+			{
+				"key": "clientSecret",
+				"value": "{{auth0_client_secret}}",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "{{auth0_client_id}}",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "https://{{auth0_domain}}/authorize?audience={{auth0_audience}}",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "client_authentication",
+				"value": "body",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "7b730d48-5065-49ff-9bd3-383321573e8b",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "05d70abd-e544-406b-8146-3927cabf7903",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "3511748a-e3f8-4ade-ab24-c70b0fb3d844",
+			"key": "domain",
+			"value": "https://e5pin88i37.execute-api.us-east-1.amazonaws.com/dev"
+		},
+		{
+			"id": "b1aa1c7c-c8f3-4304-9a1f-b8e069d3b2c1",
+			"key": "auth0_domain",
+			"value": "dev--otter.eu.auth0.com"
+		},
+		{
+			"id": "1addf955-ff7d-4b2d-a612-7a375351a6eb",
+			"key": "auth0_client_id",
+			"value": "DW6TTG62GAJOzT6NWw7jYtHxCo2wZr8H"
+		},
+		{
+			"id": "ebc59ddf-1d0e-4513-8805-e67230e2f42a",
+			"key": "auth0_client_secret",
+			"value": "e9FLvPCyJ-Mg-rgfrNXTFcALMQl4LW5AqlXBnFjU4c83MkXsgm0TIUed3RJoJ5rm"
+		},
+		{
+			"id": "0e7dd4c9-d3fd-46b4-9db1-e0afd9d8b2ef",
+			"key": "auth0_audience",
+			"value": "http://www.wheretodance.com/"
+		},
+		{
+			"id": "72383f8d-e673-4377-aa19-68f1e661c8bf",
+			"key": "venueId",
+			"value": ""
+		}
+	],
+	"protocolProfileBehavior": {}
+}
