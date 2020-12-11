@@ -52,7 +52,7 @@ export class VenueAccess {
 			userId: userId,
 		});
 
-		const params: AWS.DynamoDB.DocumentClient.GetItemInput = {
+		const params: AWS.DynamoDB.DocumentClient.QueryInput = {
 			TableName: this.venuesTable,
 			KeyConditionExpression: '#userId =:i',
 			ExpressionAttributeNames: {
@@ -63,7 +63,7 @@ export class VenueAccess {
 			}
 		};
 
-		const result = await this.docClient.get(params);
+		const result = await this.docClient.query(params).promise();
 
 		const items = result.Items;
 
