@@ -1,6 +1,8 @@
 import * as AWS from 'aws-sdk';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { Venue } from '../models/Venue';
+import { VenueUpdate } from '../models/VenueUpdate';
+
 
 import { createLogger } from '../utils/logger';
 
@@ -11,6 +13,35 @@ export class VenueAccess {
     private readonly docClient: DocumentClient = new AWS.DynamoDB.DocumentClient(),
     private readonly venuesTable = process.env.VENUES_TABLE
 	) {}
+
+	async updateVenue(userId: string, venue: VenueUpdate, venueId: string): Promise<Venue> {
+		logger.info('Updating a venue', {
+			venueId: venueId,
+			userId: userId
+		});
+
+		const params = {
+			TableName: this.venuesTable,
+			Key: {
+				userId: userId,
+				venueId: venueId
+			},
+			ExpressionAttributeNames: {
+				'#venue_name': 'name',
+			},
+			ExpressionAttributeValues: {
+				':name': venue.name,
+			},
+			UpdateExpression: 'SET #venue_name = :name',
+			ReturnValues: 'ALL_NEW',
+		};
+
+		const result = await this.docClient.update(params).promise();
+
+		logger.info('Update statement has completed without error', { result: result });
+
+		return result.Attributes as Venue;
+	}
 
 	async createVenue(venue: Venue): Promise<Venue> {
 

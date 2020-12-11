@@ -34,6 +34,9 @@ custom:
       - name: CreateVenueRequest
         contentType: application/json
         schema: ${file(models/create-venue-request.json)}
+      - name: "UpdateVenueRequest"
+        contentType: application/json
+        schema: ${file(models/update-venue-request.json)}
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
@@ -107,6 +110,27 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.VENUES_TABLE}
+
+  UpdateVenue:
+    handler: src/lambda/http/updateVenue.handler
+    events:
+      - http:
+          method: patch
+          path: venues/{venueId}
+          cors: true
+          authorizer: Auth
+          reqValidatorName: RequestBodyValidator
+          documentation:
+            summary: Update a venue
+            description: Update an existing venue, owned by an authenticated user
+            requestModels:
+              'application/json': UpdateVenueRequest
+    iamRoleStatementsName: Update-DynamoDB-Venues-Table
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.VENUES_TABLE}
 
 resources:

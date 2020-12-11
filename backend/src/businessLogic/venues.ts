@@ -3,8 +3,10 @@ import * as uuid from 'uuid';
 import { Venue } from '../models/Venue';
 import { VenueAccess } from '../dataLayer/venuesAccess';
 import { CreateVenueRequest } from '../requests/CreateVenueRequest';
+import { UpdateVenueRequest } from '../requests/UpdateVenueRequest';
 
 import { createLogger } from '../utils/logger';
+import { VenueUpdate } from '../models/VenueUpdate';
 
 const logger = createLogger('venuesBusinessLogic');
 
@@ -43,4 +45,18 @@ export async function getUsersVenues(userId: string): Promise<Venue[]> {
 	logger.info('Entering Business Logic function getMyVenues');
 
 	return await venueAccess.getUsersVenues(userId);
+}
+
+export async function updateVenue(
+	userId: string,
+	venue: UpdateVenueRequest,
+	venueId: string): Promise<Venue> {
+	
+	logger.info('Entering Business Logic function updateVenue');
+
+	const updatedVenue: VenueUpdate = {
+		name: venue.name
+	};
+
+	return await venueAccess.updateVenue(userId, updatedVenue, venueId);
 }
