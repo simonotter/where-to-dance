@@ -33,6 +33,7 @@ There is no frontend application. You must use Postman to execute the API endpoi
 
 ## Using Postman
 Import the *postman_collection.json* into Postman or click on the button below.
+
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/672c4b00b6ad213f2835)
 ### Authentication
 All of the applications API endpoints require authorisation. You must generate a JWT from within the Postman collection.
