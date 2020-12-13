@@ -2,6 +2,7 @@ import * as uuid from 'uuid';
 
 import { Venue } from '../models/Venue';
 import { VenueAccess } from '../dataLayer/venuesAccess';
+import { ImageAccess } from '../dataLayer/fileAccess';
 import { CreateVenueRequest } from '../requests/CreateVenueRequest';
 import { UpdateVenueRequest } from '../requests/UpdateVenueRequest';
 
@@ -11,7 +12,17 @@ import { VenueUpdate } from '../models/VenueUpdate';
 const logger = createLogger('venuesBusinessLogic');
 
 const venueAccess = new VenueAccess();
+const imageAccess = new ImageAccess();
 
+export async function getUrl(venueId: string, userId: string): Promise<string> {
+	// Get pre-signed URL from filestore
+	const url = await imageAccess.getUploadUrl(venueId);
+	logger.info('url', { url: url });
+
+	// Write final url to datastore
+	await venueAccess.updateVenueUrl(venueId, userId);
+	return url;
+}
 
 export async function createVenue(
 	createVenueRequest: CreateVenueRequest,

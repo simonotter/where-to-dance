@@ -3,4 +3,5 @@ export interface Venue {
   userId: string;
   name: string;
   createdAt: string;
+  attachmentUrl?: string;
 }

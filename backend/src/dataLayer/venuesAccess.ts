@@ -11,7 +11,8 @@ const logger = createLogger('venuesDataAccess');
 export class VenueAccess {
 	constructor(
     private readonly docClient: DocumentClient = new AWS.DynamoDB.DocumentClient(),
-    private readonly venuesTable = process.env.VENUES_TABLE
+		private readonly venuesTable = process.env.VENUES_TABLE,
+		private readonly bucketName = process.env.IMAGES_S3_BUCKET,
 	) {}
 
 	async updateVenue(userId: string, venue: VenueUpdate, venueId: string): Promise<Venue> {
@@ -99,5 +100,36 @@ export class VenueAccess {
 		const items = result.Items;
 
 		return items as Venue[];
+	}
+
+	async updateVenueUrl(venueId: string, userId: string): Promise<Venue> {
+		logger.info('Updating a venues\'s URL for item:', {
+			venueId: venueId,
+			userId: userId
+		});
+
+		const url = `https://${this.bucketName}.s3.amazonaws.com/${venueId}`;
+
+		const params = {
+			TableName: this.venuesTable,
+			Key: {
+				userId: userId,
+				venueId: venueId
+			},
+			ExpressionAttributeNames: {
+				'#venue_attachmentUrl': 'attachmentUrl'
+			},
+			ExpressionAttributeValues: {
+				':attachmentUrl': url
+			},
+			UpdateExpression: 'SET #venue_attachmentUrl = :attachmentUrl',
+			ReturnValues: 'ALL_NEW',
+		};
+
+		const result = await this.docClient.update(params).promise();
+
+		logger.info('Update statement has completed without error', { result: result });
+
+		return result.Attributes as Venue;
 	}
 }
