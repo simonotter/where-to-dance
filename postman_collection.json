@@ -17,7 +17,17 @@
 							"    pm.response.to.have.status(201);",
 							"});",
 							"",
-							"// Store venueId in collection variable",
+							"var res = JSON.parse(responseBody).item;",
+							"var req = JSON.parse(pm.request.body);",
+							"",
+							"console.log(req);",
+							"console.log(res);",
+							"",
+							"pm.test(\"New venue contains requested name\", function() {",
+							"    pm.expect((res.name) === req.name).to.be.true;",
+							"})",
+							"",
+							"// Store venueId in collection variable for later tests",
 							"var venueId = pm.response.json().item.venueId;",
 							"pm.collectionVariables.set('venueId', venueId);"
 						],
@@ -30,7 +40,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"my studio\"\n}",
+					"raw": "{\n    \"name\": \"my test\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -61,13 +71,19 @@
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
-							"const jasonData = pm.response.json();",
-							"pm.test(\"Test array properties\", () => {",
-							"   _.each(jasonData.items, (item) => {",
-							"       console.log(item);",
-							"   });",
+							"var response = JSON.parse(responseBody);",
+							"var _ = require('lodash')",
+							"var venueId = pm.collectionVariables.get('venueId');",
 							"",
-							"});"
+							"var venueExists = _.find(response.items, function(o) { ",
+							"    return o.venueId == venueId; });",
+							"",
+							"console.log(venueExists);",
+							"pm.test(\"Expected Venue ID is present\", function ()",
+							"{",
+							"    pm.expect((venueExists) != null).to.be.true;",
+							"});",
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -98,7 +114,17 @@
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
-							"});"
+							"});",
+							"",
+							"var res = JSON.parse(responseBody).updatedVenue;",
+							"var req = JSON.parse(pm.request.body);",
+							"",
+							"console.log(req);",
+							"console.log(res);",
+							"",
+							"pm.test(\"New venue contains requested name\", function() {",
+							"    pm.expect((res.name) === req.name).to.be.true;",
+							"})"
 						],
 						"type": "text/javascript"
 					}
@@ -124,6 +150,48 @@
 					"path": [
 						"venues",
 						"{{venueId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add venue image",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f1600f38-be23-4857-8606-99b8fa213b27",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "file",
+					"file": {},
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/venues/{{venueId}}/attachment",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"venues",
+						"{{venueId}}",
+						"attachment"
 					]
 				}
 			},
@@ -167,7 +235,7 @@
 		"oauth2": [
 			{
 				"key": "tokenName",
-				"value": "Auth0 Token3",
+				"value": "Auth0 Token4",
 				"type": "string"
 			},
 			{
@@ -261,32 +329,32 @@
 	],
 	"variable": [
 		{
-			"id": "3511748a-e3f8-4ade-ab24-c70b0fb3d844",
+			"id": "87e85ea5-d0e3-4b5b-aad9-4d1162586348",
 			"key": "domain",
 			"value": "https://e5pin88i37.execute-api.us-east-1.amazonaws.com/dev"
 		},
 		{
-			"id": "b1aa1c7c-c8f3-4304-9a1f-b8e069d3b2c1",
+			"id": "ac4545dd-69fd-4e4e-871e-58d66d05adf9",
 			"key": "auth0_domain",
 			"value": "dev--otter.eu.auth0.com"
 		},
 		{
-			"id": "1addf955-ff7d-4b2d-a612-7a375351a6eb",
+			"id": "6b8eab4e-b0a5-4337-b0b6-d52870ba6bb7",
 			"key": "auth0_client_id",
 			"value": "DW6TTG62GAJOzT6NWw7jYtHxCo2wZr8H"
 		},
 		{
-			"id": "ebc59ddf-1d0e-4513-8805-e67230e2f42a",
+			"id": "c8df56da-42ad-419f-98a1-a61a8192f072",
 			"key": "auth0_client_secret",
 			"value": "e9FLvPCyJ-Mg-rgfrNXTFcALMQl4LW5AqlXBnFjU4c83MkXsgm0TIUed3RJoJ5rm"
 		},
 		{
-			"id": "0e7dd4c9-d3fd-46b4-9db1-e0afd9d8b2ef",
+			"id": "0ac1a34c-0f87-43cc-a0f1-d81de0685fce",
 			"key": "auth0_audience",
 			"value": "http://www.wheretodance.com/"
 		},
 		{
-			"id": "72383f8d-e673-4377-aa19-68f1e661c8bf",
+			"id": "847b0bf3-a96c-4d55-a6a8-cf8f0f548250",
 			"key": "venueId",
 			"value": ""
 		}
